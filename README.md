@@ -220,6 +220,10 @@ The library cell developer must adhere to the rules given on the inputs so that 
  
  ### Timing Characterization:
  
+It contains :
+Propogation Delay - (out_thr)-time(in_thr)
+Transition Time - time(slew_high_rise_thr)-time(slew_low_rise_thr)} or time(slew_high_fall_thr)-time(slew_low_fall_thr)
+ 
 Below are the timing variables for slew. This is two inverters in series, red is output of first inverter and blue is output of second inverter:  
 
 ![image](https://user-images.githubusercontent.com/87559347/183231913-a9b3826b-5139-4bdc-b12b-3495b87cd8b9.png)
@@ -230,6 +234,144 @@ Below are the timing variables for propagation delay. The red is input waveform 
 
 Negative propagation delay is unexpected. That means the output comes before the input so designer needs to choose correct threshold point to produce positive delay. Delay threshold is usually 50% and slew rate threshold is usually 20%-80%.
 
+# DAY 3: Design a Library Cell using Magic Layout and Ngspice Characterization
 
+### Designing a Library Cell:
+1. SPICE deck = component connectivity (basically a netlist) of the CMOS inverter.
+2. SPICE deck values = value for W/L (0.375u/0.25u means width is 375nm and lengthis 250nm). 
+3. PMOS should be wider in width(2x or 3x) than NMOS. 
+4. The gate and supply voltages are normally a multiple of length (in the example, gate voltage can be 2.5V)  
+5. Add nodes to surround each component and name it. This will be used in SPICE to identify a component.    
 
+### SPICE Deck Netlist Description:  
 
+![image](https://user-images.githubusercontent.com/87559347/183240195-608727e5-2d04-4e44-ab4a-2df545cd13ea.png)
+
+**Notes:**
+ - Syntax for the PMOS and NMOS descriptiom:
+     - `[component name] [drain] [gate] [source] [substrate] [transistor type] W=[width] L=[length]`
+ - All components are described based on nodes and its values
+ - `.op` is the start of SPICE simulation operation where Vin will be sweep from 0 to 2.5 with 0.5 steps
+ - `tsmc_025um_model.mod` is the model file containing the technological parameters for the 0.25um NMOS and PMOS
+
+### SPICE Analysis for Switching Threshold and Propagation Delay:
+CMOS robustness depends on:  
+
+1. Switching threshold = Vin is equal to Vout. This the point where both PMOS and NMOS is in saturation or kind of turned on, and leakage current is high. If PMOS is thicker than NMOS, the CMOS will have higher switching threshold (1.2V vs 1V) while threshold will be lower when NMOS becomes thicker.
+2. Propagation delay = rise or fall delay
+ ### CMOS Fabrication Process (16-Mask CMOS Process):  
+ **1. Selecting a substrate** = Layer where the IC is fabricated. Most commonly used is P-type substrate  
+ **2. Creating active region for transistor** = Separate the transistor regions using SiO2 as isolation
+  - Mask 1 = Covers the photoresist layer that must not be etched away (protects the two transistor active regions)
+  - Photoresist layer = Can be etched away via UV light  
+  - Si3N4 layer = Protection layer to prevent SiO2 layer to grow during oxidation (oxidation furnace)  
+  - SiO2 layer = Grows during oxidation (LOCOS = Local Oxidation of Silicon) and will act as isolation regions between transistors or active regions  
+3. **N-Well and P-Well Fabrication** = Fabricate the substrate needed by PMOS (N-Well) and NMOS (P-Well)  
+  - Phosporus (5 valence electron) is used to form N-well  
+  - Boron (3 valence electron) is used to form P-Well.  
+  - Mask 2 protects the N-Well (PMOS side) while P-Well (NMOS side) is being fabricated then Mask 3 while N-Well (PMOS side) is being fabricated
+4. **Formation of Gate** = Gate fabrication affects threshold voltage. Factors affecting threshold voltage includes:    
+    Main parameters are:
+  - Doping Concentration = Controlled by ion implantation (Mask 4 for Boron implantation in NMOS P-Well and Mask 5 for Arsenic implantation in PMOS N-Well)
+  - Oxide capacitance = Controlled by oxide thickness  (SiO2 layer is removed then rebuilt to the desire thickness)  
+  - Mask 6 is for gate formation using polysilicon layer.
+5. **Lightly Doped Drain formation** = Before forming the source and drain layer, lightly doped impurity is added: 
+  - Mask 7 for N- implantation (lightly doped N-type) for NMOS 
+  - Mask 8 for P- implantation (lightly doped P-type) for PMOS.  
+Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source and drain but the lightly doped impurity will help maintain spacing between the source and drain and prevent hot electron effect and short channel effect. 
+6. **Source and Drain Formation** = Mask 9 is for N+ implantation and Mask 10 for P+ implantation  
+ - Channeling is when implantations dig too deep into substrate so add screen oxide before implantation
+ - The side-wall spacers maintains the N-/P- while implanting the N+/P+    
+7. **Form Contacts and Interconnects** =  TiN is for local interconnections and also for bringing contacts to the top. TiS2 is for the contact to the actual Drain-Gate-Source. Mask 11 is for etching off the TiN interconnect for the first layer contact. 
+8. **Higher Level Metal Formation** = We need to planarize first the layer via CMP before adding a metal interconnect. Aluminum contact is used to connect the lower contact to higher metal layer. Process is repeated until the contact reached the outermost layer.
+ - Mask 12 is for first contact hole
+ - Mask 13 is for first Aluminum contact layer
+ - Mask 14 is for second contact hole
+ - Mask 15 is for second Aluminum contact layer. Mask 16 is for making contact to topmost layer. 
+ 
+![image](https://user-images.githubusercontent.com/87559347/187158161-4d230654-5102-4225-8e58-d6d8ed950990.png)
+
+### Lab 3 - Introduction to Sky130 basic layers layout and LEF using inverter:
+  
+1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). 
+2. Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. In the below figure, you can see tech file getting added to vsdstdcelldesign
+
+<img width="959" alt="7 techfile added" src="https://user-images.githubusercontent.com/83575446/215544859-deadc35e-d812-47dd-acd1-6a84c83f1502.png">
+
+3. View the mag file using magic `magic -T sky130A.tech sky130_inv.mag &`:  
+
+<img width="457" alt="inverter" src="https://user-images.githubusercontent.com/83575446/215546262-98a5d2f0-c150-4f14-a9e0-7bca19b5caf3.png">
+
+4. Try DRC at top tool bar to find the DRC violations and type `what` in tkcon window to find the error
+
+<img width="958" alt="11 dimensions of grid" src="https://user-images.githubusercontent.com/83575446/215548187-5df11006-b78c-4ee8-8458-0191aa7421ee.png">
+
+### Extraction of SPICE file & Slew Rate and Propagation Delay Characterization 
+
+1. Make an extract file `.ext` by typing `extract all` in the tkon terminal. 
+2. Extract the `.spice` file from this ext file by typing `ext2spice cthresh 0 rthresh 0` then `ext2spice` in the tcon terminal.  
+
+<img width="960" alt="10 spice created" src="https://user-images.githubusercontent.com/83575446/215549589-55e619df-34ac-4060-ad89-6c34ea426a58.png">
+
+3. Modify the spice file to be able to plot a transient response
+4. Change the grid size by checking in layout
+
+<img width="958" alt="11 dimensions of grid" src="https://user-images.githubusercontent.com/83575446/215550902-cb4c00c1-86e0-4753-a13a-92bccb914956.png">
+
+5. Include pmos, nmos libraries from `\vsdstdcelldesign-master\libs\nshort.lib` and `\vsdstdcelldesign-master\libs\nphort.lib` which are the spice model files for nmos and pmos
+6. Rename the pmos and nmos names
+
+<img width="959" alt="12 pmos name" src="https://user-images.githubusercontent.com/83575446/215551628-bb865cca-7ce9-482d-b300-c49a7f1d6ac6.png">
+
+8. Change C3(Cload) to 2fF(increase it) to get the higher delay
+9. Define ground, supply & input signals
+
+```
+* SPICE3 file created from sky130_inv.ext - technology: sky130A
+
+.option scale=0.01u
+.include ./libs/pshort.lib
+.include ./libs/nshort.lib
+
+* .subckt sky130_inv A Y VPWR VGND
+M0 Y A VGND VGND nshort_model.0 ad=1435 pd=152 as=1365 ps=148 w=35 l=23
+M1 Y A VPWR VPWR pshort_model.0 ad=1443 pd=152 as=1517 ps=156 w=37 l=23
+C0 A VPWR 0.08fF
+C1 Y VPWR 0.08fF
+C2 A Y 0.02fF
+C3 Y VGND 0.18fF
+C4 VPWR VGND 0.74fF
+* .ends
+
+* Power supply 
+VDD VPWR 0 3.3V 
+VSS VGND 0 0V 
+
+* Input Signal
+Va A VGND PULSE(0V 3.3V 0 0.1ns 0.1ns 2ns 4ns)
+
+* Simulation Control
+.tran 1n 20n
+.control
+run
+.endc
+.end
+```  
+
+10. Open the spice file by typing `ngspice sky130A_inv.spice`. 
+11. Generate a graph using `plot y vs time a` :  
+
+<img width="959" alt="13 spice graph" src="https://user-images.githubusercontent.com/83575446/215551955-d3adaaf5-198b-4e70-a4bc-d153f6e50401.png">
+
+Using this transient response, we will now characterize the cell's slew rate and propagation delay:  
+- Rise Transition [output transition time from 20%(0.66V) to 80%(2.64V)]:
+    - **Tr_r = 2.19981ns - 2.15739ns = 0.04242 ns**  
+
+- Fall Transition [output transition time from 80%(2.64V) to 20%(0.66V)]:
+   - **Tr_f = 4.0672ns - 4.04007ns = 0.02713ns**   
+
+- Rise Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
+   - **D_r = 2.18197ns - 2.15003ns = 0.03194ns**   
+
+- Fall Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
+   - **D_f = 4.05364ns - 4.05001ns =0.00363ns**  
