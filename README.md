@@ -5,50 +5,43 @@
 This is a 5 day workshop done on Advanced Physical design which is a crucial part of VLSI design flow using open source. In a glimpse, we take a netlist & produced GDSII file from it.
 
 # Table of Contents  
- - [DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK]
-   - [Simplified RTL to GSDII Flow]
-   - [OpenLane Directory Hierarchy]
-   - [Lab [Day 1] - Determine Flip-flop Ratio]
+ - DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK
+   - Simplified RTL to GSDII Flow
+   - OpenLane Directory Hierarchy
+   - Lab [Day 1] - Determine Flip-flop Ratio
    
  - [DAY 2: Good Floorplan vs Bad Floorplan and Introduction to Library Cells]
-   - [Floorplan Stage]
-   - [Placement Stage]
-   - [Lab [Day 2] - Determine Die Area]
+   - Floorplan Stage
+   - Placement Stage
+   - Lab [Day 2] - Determine Die Area
     - [Library Characterization]
     - [Timing Characterization]
      
- - [DAY 3: Design a Library Cell using Magic Layout and Ngspice Characterization]
-   - [Designing a Library Cell]
-     - [SPICE Deck Netlist Description]
-     - [SPICE Analysis for Switching Threshold and Propagation Delay]
-   - [CMOS Fabrication Process (16-Mask CMOS Process)]
-   - [Layout and Metal Layers]
-   - [Lab : Slew Rate and Propagation Delay Characterization]
-   - [Fix Tech File DRC via Magic]
+ - DAY 3: Design a Library Cell using Magic Layout and Ngspice Characterization
+   - Designing a Library Cell
+     - SPICE Deck Netlist Description
+     - SPICE Analysis for Switching Threshold and Propagation Delay
+   - CMOS Fabrication Process (16-Mask CMOS Process)
+   - Layout and Metal Layers
+   - Lab 3 - Introduction to Sky130 basic layers layout and LEF using inverter
    
- - [DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree]
-   - [Lab Part 1: Extracting the LEF File](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-part-1-day-4---extracting-the-lef-file)
-   - [Lab Part 2: Plug-in the Customized Inverter Cell to OpenLane](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-part-2-day-4---plug-in-the-customized-inverter-cell-to-openlane)
-   - [Delay Table](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#delay-table)
-   - [Lab Part 3: Fix Negative Slack](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-part-3-day-4---fix-negative-slack)
-   - [Lab Part 4: Locating the Custom Inverter Cell in Layout](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-part-4-day-4---locating-the-custom-inverter-cell-in-layout)
-   - [Timing Analysis (Pre-Layout STA using Ideal Clocks)](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#timing-analysis-pre-layout-sta-using-ideal-clocks)
-     - [Lab Part 5: Pre-Layout STA with OpenSTA](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-part-5-day-4---pre-layout-sta-with-opensta)
-       - [Summary of OpenSTA Commands](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#summary-of-opensta-commands)
-       - [SDC File Parameters](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#sdc-file-parameters)
-   - [Clock Tree Synthesis Stage](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#clock-tree-synthesis-stage)
-     - [CTS Command Script](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#cts-command-script)
-   - [Timing Analysis with Real Clocks](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#timing-analysis-with-real-clocks)
-     - [Lab Part 6: Multi-corner STA for Post-CTS](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-part-6-day-4---multi-corner-sta-for-post-cts)
-     - [Lab Part 7: Replacing the Clock Buffer](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-part-7-day-4---replacing-the-clock-buffer)
-   
- - [DAY 5: Final Steps for RTL2GDS using TritonRoute and OpenSTA](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
-   - [Maze Routing](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#maze-routing)
-   - [DRC Cleaning](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#drc-cleaning)
-   - [Power Distribution Network (review)](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#power-distribution-network-review)
-   - [Routing Stage and TritonRoute](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#routing-stage-and-tritonroute)
-   - [Lab Part 1: Routing Stage](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-part-1-day-5---routing-stage)
-   - [Lab Part 2: SPEF Extraction and GDSII Streaming](https://github.com/AngeloJacobo/OpenLANE-Sky130-Physical-Design-Workshop#lab-part-2-day-5---spef-extraction-and-gdsii-streaming)
+ - DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree
+   - Lab [Day 4] - Extracting the LEF File
+   - Plug-in the Customized Inverter Cell to OpenLane
+   - Delay Table
+   - Fix Negative Slack
+   - Locating the Custom Inverter Cell in Layout
+   - Setup Timing Analysis
+   - Clock Tree Synthesis Stage
+   - Timing Analysis with Real Clocks
+   - Multi-corner STA for Post-CTS
+    
+ - DAY 5: Final Steps for RTL2GDS using TritonRoute and OpenSTA
+   - Maze Routing - Lee's Algorithm
+   - DRC Cleaning
+   - Routing Stage and TritonRoute
+   - Lab Day 5 - Power Distribution Network (PDN) and routing
+   - SPEF Extraction and GDSII Streaming
    
 
 ## Sky130 Day 1 - Inception of open-source EDA, OpenLANE and Sky130 PDK
