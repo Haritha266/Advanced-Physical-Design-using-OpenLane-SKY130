@@ -631,11 +631,10 @@ Check the last def file created using `echo $::env(CURRENT_DEF)` command in dock
 <img width="796" alt="pdn" src="https://user-images.githubusercontent.com/83575446/215584512-c5bf1e4c-27b7-4da6-b168-1f503103a1df.png">
 
 - run `run_routing`
-- 
+
 <img width="795" alt="routing" src="https://user-images.githubusercontent.com/83575446/215584837-34b28892-4530-45d8-bea3-3525dff66b50.png">
 
 - This will do both global and detailed routing, this will take multiple optimization iterations until the DRC violation is reduced to zero. 
-
 
  
  ### SPEF Extraction and GDSII Streaming:
