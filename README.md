@@ -10,12 +10,12 @@ This is a 5 day workshop done on Advanced Physical design which is a crucial par
    - OpenLane Directory Hierarchy
    - Lab [Day 1] - Determine Flip-flop Ratio
    
- - [DAY 2: Good Floorplan vs Bad Floorplan and Introduction to Library Cells]
+ - DAY 2: Good Floorplan vs Bad Floorplan and Introduction to Library Cells
    - Floorplan Stage
    - Placement Stage
    - Lab [Day 2] - Determine Die Area
-    - [Library Characterization]
-    - [Timing Characterization]
+    - Library Characterization
+    - Timing Characterization
      
  - DAY 3: Design a Library Cell using Magic Layout and Ngspice Characterization
    - Designing a Library Cell
@@ -23,7 +23,7 @@ This is a 5 day workshop done on Advanced Physical design which is a crucial par
      - SPICE Analysis for Switching Threshold and Propagation Delay
    - CMOS Fabrication Process (16-Mask CMOS Process)
    - Layout and Metal Layers
-   - Lab 3 - Introduction to Sky130 basic layers layout and LEF using inverter
+   - Lab [DAY 3] - Introduction to Sky130 basic layers layout and LEF using inverter
    
  - DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree
    - Lab [Day 4] - Extracting the LEF File
@@ -40,7 +40,7 @@ This is a 5 day workshop done on Advanced Physical design which is a crucial par
    - Maze Routing - Lee's Algorithm
    - DRC Cleaning
    - Routing Stage and TritonRoute
-   - Lab Day 5 - Power Distribution Network (PDN) and routing
+   - Lab [Day 5] - Power Distribution Network (PDN) and routing
    - SPEF Extraction and GDSII Streaming
    
 
@@ -329,7 +329,7 @@ Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source an
  
 ![image](https://user-images.githubusercontent.com/87559347/187158161-4d230654-5102-4225-8e58-d6d8ed950990.png)
 
-### Lab 3 - Introduction to Sky130 basic layers layout and LEF using inverter:
+### Lab [DAY 3] - Introduction to Sky130 basic layers layout and LEF using inverter:
   
 1. Clone [vsdstdcelldesign](https://github.com/nickson-jose/vsdstdcelldesign). 
 2. Copy the techfile `sky130A.tech` from `pdks/sky130A/libs.tech/magic/` to directory of the cloned repo. In the below figure, you can see tech file getting added to vsdstdcelldesign
@@ -657,7 +657,7 @@ OpenLane routing stage consists of two stages:
  - Performs detailed routing and honors the pre-processed route guides (made by global route) and uses MILP based (Mixed  Integer Linear Programming algorithm) panel routing scheme(uses panel as the grid guide for routing) with intra-layer parallel routing (routing happens simultaneously in a single layer) and inter-layer sequential layer (routing starts from bottom metal layer to top metal layer sequentially and not simultaneously). 
  - Honors preferred direction of a layer. Metal layer direction is alternating (metal layer direction is specified in the LEF file e.g. met1 Horizontal, met2 Vertical, etc.) to reduce overlapping wires between layer and reduce potential capacitance which can degrade the signal.  
 
-### Lab Day 5 - Power Distribution Network (PDN) and routing
+### Lab [Day 5] - Power Distribution Network (PDN) and routing
 
 Check the last def file created using `echo $::env(CURRENT_DEF)` command in docker
 
