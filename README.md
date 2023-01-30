@@ -374,4 +374,122 @@ Using this transient response, we will now characterize the cell's slew rate and
    - **D_r = 2.18197ns - 2.15003ns = 0.03194ns**   
 
 - Fall Delay [delay between 50%(1.65V) of input to 50%(1.65V) of output]:
-   - **D_f = 4.05364ns - 4.05001ns =0.00363ns**  
+   - **D_f = 4.05364ns - 4.05001ns =0.00363ns** 
+
+# DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree
+
+To convert grid into track information it should follow the below rules :
+  - The i/p & o/p ports must lie on intersection of vertical & horizantal tracks
+  - The width of standard cell should be power multiple of track path
+  - The height should be odd multiple of track vertical pitch
+  - The width of standard cell is odd multiple of X pitch
+  
+### Lab [Day 4] - Extracting the LEF File:  
+
+PnR tool does not need all informations from the `.mag` file like the logic part but only PnR boundaries, power/ground ports, and input/output ports. This is what a [LEF file](https://teamvlsi.com/2020/05/lef-lef-file-in-asic-design.html) actually contains. So the next step is to extract the LEF file from Magic. But first, we need to follow guidelines of the PnR tool for the standard cells:
+ - The input and output ports lies on the intersection of the horizontal and vertical tracks (ensure the routes can reach that ports). 
+ - The width of the standard cell must be odd multiple of the tracks horizontal pitch and height must be odd multiples of tracks vertical pitch   
+ 
+ To check these guidelines, we need to change the grid of Magic to match the actual metal tracks. The `pdks/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info` contains those metal informations.   
+ 
+ <img width="960" alt="14 tracks info" src="https://user-images.githubusercontent.com/83575446/215556315-8d59fee5-ea2a-48ea-8d9a-e533bb952f91.png">
+
+1. Use `grid` command inside the tkon terminal to match the tracks informations:  
+
+![image](https://user-images.githubusercontent.com/87559347/188419121-ce050fc7-6984-4266-9b24-47002934fc83.png)
+
+2. Exract the LEF file from magfile. To do that give cell a custom name & save the mag file with a new filename `save sky130_myinverter.mag`
+
+3. Tye `lef write` on the tcon terminal. It will generate a LEF file with same name as the magfile `sky130_myinverter.lef`. Inside that LEF file is: 
+ 
+<img width="960" alt="16 lib files created" src="https://user-images.githubusercontent.com/83575446/215557475-d3881523-a41d-4e2b-8f98-dcc698741f5a.png">
+
+### Plug-in the Customized Inverter Cell to OpenLane:
+
+1. Copy the extracted lef file `sky130_myinverter.lef`  from `/openlane/vsdstdcelldesign/libs` to the src directory of picorv32a. 
+
+```
+cp sky130_myinverter.lef harithah931/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src
+```
+
+2. Add the folowing to `config.tcl` inside the picorv32a:    
+```  
+set ::env(LIB_SYNTH) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__typical.lib"
+set ::env(LIB_FASTEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__fast.lib"
+set ::env(LIB_SLOWEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__slow.lib"
+set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__typical.lib"
+
+set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
+```
+
+This sets the liberty file that will be used for ABC mapping of synthesis (`LIB_SYNTH`) and for STA (`_FASTEST`,`_SLOWEST`,`_TYPICAL`) and also the extra LEF files (`EXTRA_LEFS`) for the customized inverter cell. The whole `config.tcl` then is:  
+
+<img width="484" alt="config" src="https://user-images.githubusercontent.com/83575446/215561636-36f9e070-6619-4305-b204-c71a811ba1d1.png">
+
+3. Run docker and prepare the design picorv32a. Plug the new lef file to the OpenLANE flow via:  
+
+```
+set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+add_lefs -src $lefs
+```  
+
+4. Next `run_synthesis` 
+5. Observe the worst negative slack value
+
+<img width="958" alt="17 slack(wns) value" src="https://user-images.githubusercontent.com/83575446/215565638-f84bc5ee-053f-42e1-911c-f39f11803d4d.png">
+
+### Delay Table:  
+
+In order to avoid large skew between endpoints of a clock tree (signal arrives at different point in time):
+ - Buffers on the same level must have same capacitive load to ensure same timing delay or latency on the same level. 
+ - Buffers on the same level must also be the same size (different buffer sizes -> different W/L ratio -> different resistance -> different RC constant -> different delay).    
+ 
+ ![image](https://user-images.githubusercontent.com/87559347/188773408-e503023f-0288-4993-a68a-5f20bccb886c.png)
+
+
+Buffers on different level will have different capacitive load and buffer size but as long as they are the same load and size on the same level, the total delay for each clock tree path will be the same thus skew will remain zero. **This means different levels will have varying input transition and output capacitive load and thus varying delay.** 
+
+Delay tables are used to capture the timing model of each cell and is included inside the liberty file. The main factor in delay is the output slew. The output slew in turn depends on **capacitive load** and **input slew**. The input slew is a function of previous buffer's output cap load and input slew and it also has its own transition delay table.
+
+![image](https://user-images.githubusercontent.com/87559347/188783693-423bd170-dd0b-4f2f-9652-8fae9418df31.png)
+
+Notice how skew is zero since delay for both clock path is x9'+y15.
+
+### Fix Negative Slack:
+
+1. Let us change some variables to minimize the negative slack. We will now change the variables "on the flight". Use `echo $::env(SYNTH_STRATEGY)` to view the current value of the variables before changing it:  
+```
+% echo $::env(SYNTH_STRATEGY)
+AREA 0
+% set ::env(SYNTH_STRATEGY) "DELAY 0"
+% echo $::env(SYNTH_BUFFERING)
+1
+% echo $::env(SYNTH_SIZING)
+0
+% set ::env(SYNTH_SIZING) 1
+% echo $::env(SYNTH_DRIVING_CELL)
+sky130_fd_sc_hd__inv_2
+```  
+With `SYNTH_STRATEGY` of `Delay 0`, the tool will focus more on optimizing/minimizing the delay, index can be 0 to 3 where 3 is the most optimized for timing (sacrificing more area). `SYNTH_BUFFERING` of 1 ensures cell buffer will be used on high fanout cells to reduce delay due to high capacitance load. `SYNTH_SIZING` of 1 will enable cell sizing where cell will be upsize or downsized as needed to meet timing. `SYNTH_DRIVING_CELL` is the cell used to drive the input ports and is vital for cells with a lot of fan-outs since it needs higher drive strength (larger driving cell needed).
+
+2. Slack got reduced
+
+<img width="957" alt="18 slack reduced" src="https://user-images.githubusercontent.com/83575446/215566059-5d850cda-8b09-4ad0-909b-3610df1a58b3.png">
+
+3. Next, follow the below commands
+
+```
+init_floorplan
+place_io
+global_placement_or
+detailed_placement
+tap_decap_or
+detailed_placement
+```
+
+### Locating the Custom Inverter Cell in Layout:  
+1. Search for instance of cell `sky130_myinverter` inside the DEF file after placement stagee
+
+`home/harithah931rk/tools/openlane_working_dir/openlane/designs/picorv32a/runs/29-01_06-33/tmp/merged.lef`
+
+
