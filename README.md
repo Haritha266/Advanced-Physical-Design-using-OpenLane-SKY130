@@ -1,8 +1,10 @@
-
 # Advanced-Physical-Design-using-OpenLane-SKY130
 
 
-This is a 5 day workshop done on Advanced Physical design which is a crucial part of VLSI design flow using open source. In a glimpse, we take a netlist & produced GDSII file from it.
+This is a 5 day workshop done on Advanced Physical design which is a crucial part of VLSI design flow using open source tools. In a nutshell, we take a netlist & produced GDSII file for picorv32a, a RISC-V based CPU core using OpenLANE with SKY130nm PDK.
+
+![214589941-6ce8de10-2e46-478b-8223-7591b4d2285c](https://user-images.githubusercontent.com/83575446/215591609-7271d498-57a8-4c6f-9b6f-cf7b7ea07f07.png)
+
 
 # Table of Contents  
  - DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK
