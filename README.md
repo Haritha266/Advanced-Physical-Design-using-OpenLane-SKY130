@@ -4,7 +4,10 @@
 
 This is a 5 day workshop done on Advanced Physical design which is a crucial part of VLSI design flow using open source. In a glimpse, we take a netlist & produced GDSII file from it.
 
-
+# Table of Contents  
+ - [DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
+   - [Simplified RTL to GSDII Flow](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#simplified-rtl-to-gdsii-flow)
+   
 
 ## Sky130 Day 1 - Inception of open-source EDA, OpenLANE and Sky130 PDK
 
@@ -488,8 +491,171 @@ detailed_placement
 ```
 
 ### Locating the Custom Inverter Cell in Layout:  
+
 1. Search for instance of cell `sky130_myinverter` inside the DEF file after placement stagee
 
-`home/harithah931rk/tools/openlane_working_dir/openlane/designs/picorv32a/runs/29-01_06-33/tmp/merged.lef`
+`/home/harithah931/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/29-01_06-33/tmp/merged.lef`
+
+2. Open the def file via magic:
+
+`magic -T /home/harithah931/Desktop/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &`
+
+<img width="272" alt="my custom cell" src="https://user-images.githubusercontent.com/83575446/215568902-31aa0b08-69a9-45a6-a71f-81a689acc124.png">
+
+### Setup Timing Analysis :
+
+1. Create the pre_sta.conf and save it in the openlane folder.
+
+```
+set_cmd_units -time ns -capacitance pF -current mA -voltage V -resistance kOhm -distance um
+read_liberty -min /home/abhinavprakash1999/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src/sky130_fd_sc_hd__slow.lib
+read_liberty -max /home/abhinavprakash1999/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src/sky130_fd_sc_hd__fast.lib
+read_verilog /home/abhinavprakash1999/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/29-01_16-21/results/synthesis/picorv32a.synthesis_cts.v
+link_design picorv32a
+read_sdc /home/abhinavprakash1999/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src/my_base.sdc
+report_checks -path_delay min_max -fields {slew trans net cap input_pin}
+report_tns
+report_wns
+```
+
+2. Creating my_base.sdc and save this file in the src folder of picorv32a folder
+
+```
+set ::env(CLOCK_PORT) clk
+set ::env(CLOCK_PERIOD) 12.000
+set ::env(SYNTH_DRIVING_CELL) sky130_fd_sc_hd__inv_8
+set ::env(SYNTH_DRIVING_CELL_PIN) Y
+set ::env(SYNTH_CAP_LOAD) 17.65
+create_clock [get_ports $::env(CLOCK_PORT)]  -name $::env(CLOCK_PORT)  -period $::env(CLOCK_PERIOD)
+set IO_PCT  0.2
+set input_delay_value [expr $::env(CLOCK_PERIOD) * $IO_PCT]
+set output_delay_value [expr $::env(CLOCK_PERIOD) * $IO_PCT]
+puts "\[INFO\]: Setting output delay to: $output_delay_value"
+puts "\[INFO\]: Setting input delay to: $input_delay_value"
 
 
+set clk_indx [lsearch [all_inputs] [get_port $::env(CLOCK_PORT)]]
+#set rst_indx [lsearch [all_inputs] [get_port resetn]]
+set all_inputs_wo_clk [lreplace [all_inputs] $clk_indx $clk_indx]
+#set all_inputs_wo_clk_rst [lreplace $all_inputs_wo_clk $rst_indx $rst_indx]
+set all_inputs_wo_clk_rst $all_inputs_wo_clk
+
+
+# correct resetn
+set_input_delay $input_delay_value  -clock [get_clocks $::env(CLOCK_PORT)] $all_inputs_wo_clk_rst
+#set_input_delay 0.0 -clock [get_clocks $::env(CLOCK_PORT)] {resetn}
+set_output_delay $output_delay_value  -clock [get_clocks $::env(CLOCK_PORT)] [all_outputs]
+
+# TODO set this as parameter
+set_driving_cell -lib_cell $::env(SYNTH_DRIVING_CELL) -pin $::env(SYNTH_DRIVING_CELL_PIN) [all_inputs]
+set cap_load [expr $::env(SYNTH_CAP_LOAD) / 1000.0]
+puts "\[INFO\]: Setting load to: $cap_load"
+set_load  $cap_load [all_outputs]
+```
+### Clock Tree Synthesis Stage:
+There are three parameters that we need to consider when building a clock tree:
+- Clock Skew = In order to have minimum skew between clock endpoints, clock tree is used. This results in equal wirelength (thus equal latency/delay) for every path of the clock. 
+- Clock Slew = Due to wire resistance and capacitance of the clock nets, there will be slew in signal at the clock endpoint where signal is not the same with the original input clock signal anymore. This can be solved by clock buffers. Clock buffer differs in regular cell buffers since clock buffers has equal rise and fall time. 
+- Crosstalk = Clock shielding prevents crosstalk to nearby nets by breaking the coupling capacitance between the victim (clock net) and aggresor (nets near the clock net), the shield might be connected to VDD or ground since those will not switch. Shileding can also be done on critical data nets.
+
+![image](https://user-images.githubusercontent.com/87559347/190031283-3bc25c79-f622-4b58-a448-95982d32612d.png)
+
+- Use `run_cts` command in openlane to run clock tree synthesis
+
+<img width="793" alt="cts" src="https://user-images.githubusercontent.com/83575446/215576302-53ca7d41-6ab7-47d2-beef-e5b76efca422.png">
+
+- Then following files created `picorv32a.cts.def` and `picorv32a.cts.def.png` 
+
+<img width="960" alt="19 cts" src="https://user-images.githubusercontent.com/83575446/215577044-da29ce95-4866-4e56-9039-8081af4e7c65.png">
+
+### Timing Analysis with Real Clocks:
+Setup and hold analysis with real clock will now include clock buffer delays:
+- In setup analysis, the point is that the data must arrive first before the clock rising edge to properly latch that data. Setup violation happens when path is slow. This is affected by parameters such as combinational delay, clock buffer delay, time period, setup time, and setup uncertainty (jitter).
+
+- Hold analysis is the delay that the MUX2 model inside the flip flop needs to move the data to outside. This is the time that the launch flop must hold the data before it reaches the capture flop. Hold analysis is done on the same rising clock edge for launch and capture flop unlike in setup analysis where it spans between two rising clock edges. Hold violation happens when path is too fast. This is affected by parameters such as combinational delay, clock buffer delays, and hold time. (time period and setup uncertainty does not matter since launch and capture flops will receive the same rising clock edges fo hold analysis)
+
+### Multi-corner STA for Post-CTS:
+We will now do STA for post clock tree synthesis to include effect of clock buffers. Similar to pre-layout STA, this will done on OpenROAD (which will then call OpenSTA):  
+- `write_db` and `read_db`is done before running STA tool, this creates a database file using LEF file and resulting DEF file of the last stage.
+- Multi-corner STA must read both min library (for hold analysis) and max library (for setup analysis) unlike in single corner STA where only the typical library is read. 
+- SDC file used is the same for single and multi-corner. 
+- Since this is post-CTS STA, `set_propagated_clock` is used. `set_propagated_clock` propagates clock latency throughout a clock network, resulting in more accurate skew and timing results throughout the clock network. This is done  postlayout, after final clock tree generation, unlike in prelayout where ideal clock is used thus no clock latency.
+- Also instead of manually running these commands, we can just simply do `source /openlane/scripts/openroad/sta_multi_corner.tcl` inside OpenROAD which runs the readily-made tcl script of OpenROAD commmands for running multi-corner STA. The result might be slightly different from the result above since the settings for `sta_multi_corner.tcl` is much more comprehensive.
+- Run the following commands
+```
+openroad
+read_db pico_cts.db
+read_verilog /openLANE_flow/designs/picorv32a/runs/29-01_16-21/results/synthesis/picorv32a.synthesis_cts.v
+read_liberty $::env(LIB_SYNTH_COMPLETE)
+link_design picorv32a
+read_sdc /openLANE_flow/designs/picorv32a/src/my_base.sdc
+set_propagated_clock [all_clocks]
+report_checks -path_delay min_max -format full_clock_expanded -digits 4
+```
+- Skew report
+
+<img width="218" alt="skew" src="https://user-images.githubusercontent.com/83575446/215572349-358ac9cd-7156-481c-bb2e-848cba9b98d4.png">
+
+# DAY 5: Final Steps for RTL2GDS using TritonRoute and OpenSTA
+
+Routing means connecting source and desination with best possible path
+
+### Maze Routing - Lee's Algorithm:
+- The shortest path is one that follows a steady increment of one (1-to-9 on the example below). There might be multiple path like this but the best path that the tool will choose is one with less bends. The route should not be diagonal and must not overlap an obstruction such as macros. 
+- This algorithm however has high run time and consume a lot of memory thus more optimized routing algorithm is preferred (but the principles stays the same where route with shortest path and less bends is preferred)  
+
+ <img width="461" alt="maze" src="https://user-images.githubusercontent.com/83575446/215582808-440267fd-7026-480d-9d26-f0ef3cc16f6c.png">
+
+### DRC Cleaning:
+DRC cleaning is the next step after routing. DRC cleaning is done to ensure the routes can be fabricated and printed in silicon faithfully. Most DRC is due to the constraints of the photolitographic machine for chip fabrication where the wavelength of light used is limited. There are thousands of DRC and some DRC are:
+1. Minimum wire width
+2. Minimum wire pitch (center to center spacing)
+3. Minimum wire spacing (edge to edge spacing)
+4. Signal short = this can be solved my moving the route to next layer using vias. This results in more DRC (Via width, Via Spacing, etc.). Higher metal layer must be wider than lower metal layer and this is another DRC.  
+
+### Routing Stage and TritonRoute:
+OpenLane routing stage consists of two stages:
+ - Global Routing - Form routing guides that can route all the nets. The tool used is FastRoute
+ - Detailed Routing - Uses the global routing's guide to actually connect the pins with least amount of wire and bends. The tool used is TritonRoute.
+ 
+ **Triton Route**
+ - Performs detailed routing and honors the pre-processed route guides (made by global route) and uses MILP based (Mixed  Integer Linear Programming algorithm) panel routing scheme(uses panel as the grid guide for routing) with intra-layer parallel routing (routing happens simultaneously in a single layer) and inter-layer sequential layer (routing starts from bottom metal layer to top metal layer sequentially and not simultaneously). 
+ - Honors preferred direction of a layer. Metal layer direction is alternating (metal layer direction is specified in the LEF file e.g. met1 Horizontal, met2 Vertical, etc.) to reduce overlapping wires between layer and reduce potential capacitance which can degrade the signal.  
+
+### Lab Day 5 - Power Distribution Network (PDN) and routing
+
+Check the last def file created using `echo $::env(CURRENT_DEF)` command in docker
+
+- run `gen_pdn`
+
+<img width="796" alt="pdn" src="https://user-images.githubusercontent.com/83575446/215584512-c5bf1e4c-27b7-4da6-b168-1f503103a1df.png">
+
+- run `run_routing`
+- 
+<img width="795" alt="routing" src="https://user-images.githubusercontent.com/83575446/215584837-34b28892-4530-45d8-bea3-3525dff66b50.png">
+
+- This will do both global and detailed routing, this will take multiple optimization iterations until the DRC violation is reduced to zero. 
+
+
+ 
+ ### SPEF Extraction and GDSII Streaming:
+ 
+ Now that we verified the routing, run post-routing STA with `run_parasitics_sta`.
+ - First, this will do a [SPEF (Standard Parasitics Extraction Format) extraction](https://www.physicaldesign4u.com/2020/05/standard-parasitic-extraction-format.html) of the parasitics resistance and capacitance. 
+ - Then multi-corner STA will be done with the extracted SPEF.  
+ - SPEF extraction and multi-corner STA will be done on all three corners (min, max, nom).   
+ 
+ The delay due to the real-world parasitics will most likely worsen the slack for both hold and setup analysis. The extracted SPEF can be located under `runs/[date]/results/routing` and the STA log files under `runs/[date]/logs/signoff`. Timing ECO can be done to reduce the slack to the desired levels.
+ 
+The last stage will be to extract the GDS file ready for fabrication, simply run `run_magic`. It creates the following file
+
+<img width="344" alt="20 GDS " src="https://user-images.githubusercontent.com/83575446/215579241-62a8cd89-03cc-488e-b1b0-57753460d6bf.png">
+
+
+## Acknowledgements
+ - [Kunal Ghosh - Co-founder of VSD](https://www.udemy.com/user/anagha/)
+ - [Nickson Jose - Workshop Instructor](https://www.udemy.com/user/nickson-jose/)
+ 
+ 
+## Inquiries  
+Connect with me at my linkedin: https://www.linkedin.com/in/haritha-gopisetty/
