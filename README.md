@@ -13,41 +13,40 @@ This is a 5 day workshop done on Advanced Physical design which is a crucial par
    - [OpenLane Directory Hierarchy](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#openlane-directory-hierarchy)
    - [Lab [Day 1] - Determine Flip-flop Ratio](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#lab-day-1---determine-flip-flop-ratio)
    
- - DAY 2: Good Floorplan vs Bad Floorplan and Introduction to Library Cells
-   - Floorplan Stage
-   - Placement Stage
-   - Lab [Day 2] - Determine Die Area
-    - Library Characterization
-    - Timing Characterization
+ - [DAY 2: Good Floorplan vs Bad Floorplan and Introduction to Library Cells](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
+   - [Floorplan Stage](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#floorplan-stage)
+   - [Placement Stage](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#placement-stage)
+   - [Lab [Day 2] - Determine Die Area](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#lab-day-2---determine-die-area)
+    - [Library Characterization](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#library-characterization)
+    - [Timing Characterization](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#timing-characterization)
      
- - DAY 3: Design a Library Cell using Magic Layout and Ngspice Characterization
-   - Designing a Library Cell
-     - SPICE Deck Netlist Description
-     - SPICE Analysis for Switching Threshold and Propagation Delay
-   - CMOS Fabrication Process (16-Mask CMOS Process)
-   - Layout and Metal Layers
-   - Lab [DAY 3] - Introduction to Sky130 basic layers layout and LEF using inverter
+ - [DAY 3: Design a Library Cell using Magic Layout and Ngspice Characterization](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#day-3-design-a-library-cell-using-magic-layout-and-ngspice-characterization)
+   - [Designing a Library Cell](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#designing-a-library-cell)
+     - [SPICE Deck Netlist Description](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#spice-deck-netlist-description)
+     - [SPICE Analysis for Switching Threshold and Propagation Delay](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#spice-analysis-for-switching-threshold-and-propagation-delay)
+   - [CMOS Fabrication Process (16-Mask CMOS Process)](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#cmos-fabrication-process-16-mask-cmos-process)
+   - [Lab [DAY 3] - Introduction to Sky130 basic layers layout and LEF using inverter](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#lab-day-3---introduction-to-sky130-basic-layers-layout-and-lef-using-inverter)
    
- - DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree
-   - Lab [Day 4] - Extracting the LEF File
-   - Plug-in the Customized Inverter Cell to OpenLane
-   - Delay Table
-   - Fix Negative Slack
-   - Locating the Custom Inverter Cell in Layout
-   - Setup Timing Analysis
-   - Clock Tree Synthesis Stage
-   - Timing Analysis with Real Clocks
-   - Multi-corner STA for Post-CTS
+ - [DAY 4: Pre-layout Timing Analysis and Importance of Good Clock Tree](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#day-4-pre-layout-timing-analysis-and-importance-of-good-clock-tree)
+   - [Lab [Day 4] - Extracting the LEF File](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#lab-day-4---extracting-the-lef-file)
+   - [Plug-in the Customized Inverter Cell to OpenLane](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#plug-in-the-customized-inverter-cell-to-openlane)
+   - [Delay Table](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#delay-table)
+   - [Fix Negative Slack](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#fix-negative-slack)
+   - [Locating the Custom Inverter Cell in Layout](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#locating-the-custom-inverter-cell-in-layout)
+   - [Setup Timing Analysis](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#setup-timing-analysis-)
+   - [Clock Tree Synthesis Stage](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#clock-tree-synthesis-stage)
+   - [Timing Analysis with Real Clocks](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#timing-analysis-with-real-clocks)
+   - [Multi-corner STA for Post-CTS](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#multi-corner-sta-for-post-cts)
     
- - DAY 5: Final Steps for RTL2GDS using TritonRoute and OpenSTA
-   - Maze Routing - Lee's Algorithm
-   - DRC Cleaning
-   - Routing Stage and TritonRoute
-   - Lab [Day 5] - Power Distribution Network (PDN) and routing
-   - SPEF Extraction and GDSII Streaming
+ - [DAY 5: Final Steps for RTL2GDS using TritonRoute and OpenSTA](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
+   - [Maze Routing - Lee's Algorithm](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#maze-routing---lees-algorithm)
+   - [DRC Cleaning](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#drc-cleaning)
+   - [Routing Stage and TritonRoute](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#routing-stage-and-tritonroute)
+   - [Lab [Day 5] - Power Distribution Network (PDN) and routing](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#lab-day-5---power-distribution-network-pdn-and-routing)
+   - [SPEF Extraction and GDSII Streaming](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#spef-extraction-and-gdsii-streaming)
    
 
-### Sky130 Day 1 - Inception of open-source EDA, OpenLANE and Sky130 PDK
+### Day 1 - Inception of open-source EDA, OpenLANE and Sky130 PDK
 
 A chip generally consists of PADS (where signals go in & out through pads), core (where logic gates sits) and Die (size of chip)
 
@@ -307,24 +306,24 @@ CMOS robustness depends on:
   - Photoresist layer = Can be etched away via UV light  
   - Si3N4 layer = Protection layer to prevent SiO2 layer to grow during oxidation (oxidation furnace)  
   - SiO2 layer = Grows during oxidation (LOCOS = Local Oxidation of Silicon) and will act as isolation regions between transistors or active regions  
-3. **N-Well and P-Well Fabrication** = Fabricate the substrate needed by PMOS (N-Well) and NMOS (P-Well)  
+3. N-Well and P-Well Fabrication = Fabricate the substrate needed by PMOS (N-Well) and NMOS (P-Well)  
   - Phosporus (5 valence electron) is used to form N-well  
   - Boron (3 valence electron) is used to form P-Well.  
   - Mask 2 protects the N-Well (PMOS side) while P-Well (NMOS side) is being fabricated then Mask 3 while N-Well (PMOS side) is being fabricated
-4. **Formation of Gate** = Gate fabrication affects threshold voltage. Factors affecting threshold voltage includes:    
+4. Formation of Gate = Gate fabrication affects threshold voltage. Factors affecting threshold voltage includes:    
     Main parameters are:
   - Doping Concentration = Controlled by ion implantation (Mask 4 for Boron implantation in NMOS P-Well and Mask 5 for Arsenic implantation in PMOS N-Well)
   - Oxide capacitance = Controlled by oxide thickness  (SiO2 layer is removed then rebuilt to the desire thickness)  
   - Mask 6 is for gate formation using polysilicon layer.
-5. **Lightly Doped Drain formation** = Before forming the source and drain layer, lightly doped impurity is added: 
+5. Lightly Doped Drain formation = Before forming the source and drain layer, lightly doped impurity is added: 
   - Mask 7 for N- implantation (lightly doped N-type) for NMOS 
   - Mask 8 for P- implantation (lightly doped P-type) for PMOS.  
 Heavily doped impurity (N+ for NMOS and P+ for PMOS) is for the actual source and drain but the lightly doped impurity will help maintain spacing between the source and drain and prevent hot electron effect and short channel effect. 
-6. **Source and Drain Formation** = Mask 9 is for N+ implantation and Mask 10 for P+ implantation  
+6. Source and Drain Formation = Mask 9 is for N+ implantation and Mask 10 for P+ implantation  
  - Channeling is when implantations dig too deep into substrate so add screen oxide before implantation
  - The side-wall spacers maintains the N-/P- while implanting the N+/P+    
-7. **Form Contacts and Interconnects** =  TiN is for local interconnections and also for bringing contacts to the top. TiS2 is for the contact to the actual Drain-Gate-Source. Mask 11 is for etching off the TiN interconnect for the first layer contact. 
-8. **Higher Level Metal Formation** = We need to planarize first the layer via CMP before adding a metal interconnect. Aluminum contact is used to connect the lower contact to higher metal layer. Process is repeated until the contact reached the outermost layer.
+7. Form Contacts and Interconnects =  TiN is for local interconnections and also for bringing contacts to the top. TiS2 is for the contact to the actual Drain-Gate-Source. Mask 11 is for etching off the TiN interconnect for the first layer contact. 
+8. Higher Level Metal Formation = We need to planarize first the layer via CMP before adding a metal interconnect. Aluminum contact is used to connect the lower contact to higher metal layer. Process is repeated until the contact reached the outermost layer.
  - Mask 12 is for first contact hole
  - Mask 13 is for first Aluminum contact layer
  - Mask 14 is for second contact hole
