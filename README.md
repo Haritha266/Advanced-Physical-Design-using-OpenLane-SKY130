@@ -7,10 +7,11 @@ This is a 5 day workshop done on Advanced Physical design which is a crucial par
 
 
 # Table of Contents  
- - [DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK]([day-1-inception-of-open-source-eda-openlane-and-sky130-pdk](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130/blob/main/README.md#sky130-day-1---inception-of-open-source-eda-openlane-and-sky130-pdk)
-   - Simplified RTL to GSDII Flow
-   - OpenLane Directory Hierarchy
-   - Lab [Day 1] - Determine Flip-flop Ratio
+ - [DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130/blob/main/README.md#sky130-day-1---inception-of-open-source-eda-openlane-and-sky130-pdk)
+   - [ASIC design Flow](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#asic-design-flow)
+   - [What is Openlane?](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#what-is-openlane)
+   - [OpenLane Directory Hierarchy](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#openlane-directory-hierarchy)
+   - [Lab [Day 1] - Determine Flip-flop Ratio](https://github.com/Haritha266/Advanced-Physical-Design-using-OpenLane-SKY130#lab-day-1---determine-flip-flop-ratio)
    
  - DAY 2: Good Floorplan vs Bad Floorplan and Introduction to Library Cells
    - Floorplan Stage
