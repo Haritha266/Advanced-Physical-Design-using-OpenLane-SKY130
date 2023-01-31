@@ -46,7 +46,7 @@ This is a 5 day workshop done on Advanced Physical design which is a crucial par
    - SPEF Extraction and GDSII Streaming
    
 
-## Sky130 Day 1 - Inception of open-source EDA, OpenLANE and Sky130 PDK
+### Sky130 Day 1 - Inception of open-source EDA, OpenLANE and Sky130 PDK
 
 A chip generally consists of PADS (where signals go in & out through pads), core (where logic gates sits) and Die (size of chip)
 
