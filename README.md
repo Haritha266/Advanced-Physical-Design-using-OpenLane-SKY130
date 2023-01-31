@@ -7,7 +7,7 @@ This is a 5 day workshop done on Advanced Physical design which is a crucial par
 
 
 # Table of Contents  
- - DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK
+ - [DAY 1: Inception of Open-source EDA, OpenLane and Sky130 PDK](day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
    - Simplified RTL to GSDII Flow
    - OpenLane Directory Hierarchy
    - Lab [Day 1] - Determine Flip-flop Ratio
