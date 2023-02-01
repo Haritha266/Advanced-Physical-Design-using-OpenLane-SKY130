@@ -683,7 +683,7 @@ Check the last def file created using `echo $::env(CURRENT_DEF)` command in dock
  
  The delay due to the real-world parasitics will most likely worsen the slack for both hold and setup analysis. The extracted SPEF can be located under `runs/[date]/results/routing` and the STA log files under `runs/[date]/logs/signoff`. Timing ECO can be done to reduce the slack to the desired levels.
  
-The last stage will be to extract the GDS file ready for fabrication, simply run `run_magic`. It creates the following file
+The last stage will be to extract the GDS file ready for fabrication, simply run `run_magic`. It creates the following file ` picrrv32a.gds.png`
 
 ![picorv32a gds](https://user-images.githubusercontent.com/83575446/216117766-148abfa9-3212-457f-ad1a-f46dca4b983b.png)
 
