@@ -685,7 +685,7 @@ Check the last def file created using `echo $::env(CURRENT_DEF)` command in dock
  
 The last stage will be to extract the GDS file ready for fabrication, simply run `run_magic`. It creates the following file
 
-<img width="344" alt="20 GDS " src="https://user-images.githubusercontent.com/83575446/215579241-62a8cd89-03cc-488e-b1b0-57753460d6bf.png">
+![picorv32a gds](https://user-images.githubusercontent.com/83575446/216117766-148abfa9-3212-457f-ad1a-f46dca4b983b.png)
 
 
 ## Acknowledgements
